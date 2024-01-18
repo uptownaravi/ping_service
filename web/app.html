@@ -1,0 +1,76 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serverless Ping Service</title>
+    <link href='https://fonts.googleapis.com/css?family=Comfortaa:500,400' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="app.css">
+</head>
+
+<body>
+    <div class="row">
+        <div class="col-md-12">
+            <form id="service">
+                <h1> Ping Service </h1>
+                <h3> Enter the Details of the Endpoint to monitor </h3>
+                <fieldset>
+
+                    <h3><label for="servicename">Service Name</label></h3>
+                    <p> Name of the service to be monitored </p>
+                    <input type="text" id="servicename" name="service_name">
+
+                    <h3><label for="url">Endpoint</label></h3>
+                    <p> url of the service to be monitored </p>
+                    <input type="url" id="mail" name="service_url">
+
+                    <h3><label for="details">Details</label></h3>
+                    <p> Addional Details about the Service </p>
+                    <textarea id="details" name="service_details"></textarea>
+
+                    <h3><label for="cron">cron</label></h3>
+                    <p> 6 charcter required with white space inbetween
+                        minute | minutes | hour | hours | day | days </p>
+                    <input type="text" id="cron" name="service_cron">
+
+                </fieldset>
+
+                <button id="submit" type="submit">Submit</button>
+
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("service").addEventListener("submit", function (event) {
+            event.preventDefault()
+
+            var xhr = new XMLHttpRequest();
+            var formData = new FormData(document.getElementById('service'));
+
+            console.log("form submitted");
+
+            let data = {
+                "service_name": formData.get('service_name'),
+                "service_url": formData.get('service_url'),
+                "service_details": formData.get('service_details'),
+                "service_cron": formData.get('service_cron')
+            };
+
+            //xhr.open("POST", url, true);
+            //xhr.send(formData);
+            fetch("<FunctionURL>", {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => response.text())
+                .then(data => { alert(data) })
+        });
+    </script>
+</body>
+
+</html>
